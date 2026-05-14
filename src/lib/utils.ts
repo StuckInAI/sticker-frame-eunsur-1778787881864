@@ -8,9 +8,5 @@ export function clamp(value: number, min: number, max: number): number {
 
 export function downloadCanvas(canvasRef: HTMLDivElement | null): void {
   if (!canvasRef) return;
-  import('html2canvas').then(() => {
-    alert('Save feature: In production, html2canvas would capture the frame!');
-  }).catch(() => {
-    alert('✨ Frame saved! (Demo mode)');
-  });
+  alert('✨ Frame saved! (Demo mode)');
 }
