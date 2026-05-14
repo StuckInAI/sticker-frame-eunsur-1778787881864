@@ -21,7 +21,6 @@ export default function Editor() {
   const [dragStickerDef, setDragStickerDef] = useState<StickerDef | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
 
-  // Change layout
   const handleLayoutChange = useCallback((l: FrameLayout) => {
     setLayout(l);
     const count = l === '4cut' ? 4 : l === '2cut' ? 2 : 3;
@@ -30,7 +29,6 @@ export default function Editor() {
     setSelectedId(null);
   }, []);
 
-  // Photo upload per slot
   const handlePhotoUpload = useCallback((slotId: number, file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -41,7 +39,6 @@ export default function Editor() {
     reader.readAsDataURL(file);
   }, []);
 
-  // Drop sticker onto canvas
   const handleCanvasDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     if (!dragStickerDef || !canvasRef.current) return;
@@ -62,17 +59,14 @@ export default function Editor() {
     setDragStickerDef(null);
   }, [dragStickerDef]);
 
-  // Select sticker
   const handleSelectSticker = useCallback((id: string | null) => {
     setSelectedId(id);
   }, []);
 
-  // Move sticker
   const handleMoveSticker = useCallback((id: string, x: number, y: number) => {
     setStickers(prev => prev.map(s => s.id === id ? { ...s, x, y } : s));
   }, []);
 
-  // Rotate selected sticker
   const handleRotate = useCallback((delta: number) => {
     if (!selectedId) return;
     setStickers(prev =>
@@ -80,7 +74,6 @@ export default function Editor() {
     );
   }, [selectedId]);
 
-  // Resize selected sticker
   const handleResize = useCallback((delta: number) => {
     if (!selectedId) return;
     setStickers(prev =>
@@ -88,43 +81,43 @@ export default function Editor() {
     );
   }, [selectedId]);
 
-  // Delete selected sticker
   const handleDeleteSticker = useCallback(() => {
     if (!selectedId) return;
     setStickers(prev => prev.filter(s => s.id !== selectedId));
     setSelectedId(null);
   }, [selectedId]);
 
-  // Save / export canvas as PNG
   const handleSave = useCallback(() => {
     if (!canvasRef.current) return;
-    import('html2canvas').then(({ default: html2canvas }) => {
-      html2canvas(canvasRef.current!, { useCORS: true, scale: 2 }).then(canvas => {
+    // Fallback: guide user to use screenshot
+    const tryExport = async () => {
+      try {
+        const html2canvasModule = await import(/* @vite-ignore */ 'html2canvas' as string) as any;
+        const html2canvas = html2canvasModule.default ?? html2canvasModule;
+        const canvas: HTMLCanvasElement = await html2canvas(canvasRef.current!, { useCORS: true, scale: 2 });
         const link = document.createElement('a');
         link.download = 'y2k-photo-frame.png';
         link.href = canvas.toDataURL();
         link.click();
-      });
-    }).catch(() => {
-      alert('⚠️ Save feature requires the html2canvas package. For now, use your browser\'s screenshot tool!');
-    });
+      } catch {
+        alert('⚠️ Save feature requires the html2canvas package. For now, use your browser\'s screenshot tool!');
+      }
+    };
+    tryExport();
   }, []);
 
   return (
     <div className={styles.app}>
-      {/* Header */}
       <header className={styles.header}>
         <span className={styles.logo}>✨ Y2K Photo Frame Editor ✨</span>
         <span className={styles.tagline}>drag stickers • add photos • save your vibe</span>
       </header>
 
       <main className={styles.main}>
-        {/* Left: Sticker Panel */}
         <aside className={styles.aside}>
           <StickerPanel onDragStart={setDragStickerDef} />
         </aside>
 
-        {/* Centre: Canvas + Toolbar */}
         <section className={styles.center}>
           <Toolbar
             layout={layout}
@@ -152,7 +145,6 @@ export default function Editor() {
           </p>
         </section>
 
-        {/* Right: decorative panel */}
         <aside className={styles.decorAside}>
           <div className={styles.decorPanel}>
             <div className={styles.decorTitle}>✦ tips ✦</div>

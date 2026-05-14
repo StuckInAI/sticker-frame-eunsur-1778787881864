@@ -44,14 +44,17 @@ export default function PlacedStickerEl({ sticker, isSelected, onSelect, onUpdat
     [sticker, onSelect, onUpdate, frameRef]
   );
 
+  const scale = sticker.scale ?? 1;
+  const zIndex = sticker.zIndex ?? 10;
+
   return (
     <div
       className={isSelected ? styles.stickerSelected : styles.sticker}
       style={{
         left: sticker.x,
         top: sticker.y,
-        transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg) scale(${sticker.scale})`,
-        zIndex: sticker.zIndex,
+        transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg) scale(${scale})`,
+        zIndex,
       }}
       onMouseDown={handleMouseDown}
     >

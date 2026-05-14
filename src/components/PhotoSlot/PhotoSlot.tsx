@@ -27,6 +27,8 @@ export default function PhotoSlotEl({ slot, borderColor, onAddPhoto, onSetActive
     e.target.value = '';
   };
 
+  const imageUrl = slot.imageUrl ?? slot.dataUrl;
+
   return (
     <div
       className={styles.slot}
@@ -40,9 +42,9 @@ export default function PhotoSlotEl({ slot, borderColor, onAddPhoto, onSetActive
         onChange={handleFileChange}
         style={{ display: 'none' }}
       />
-      {slot.imageUrl ? (
+      {imageUrl ? (
         <img
-          src={slot.imageUrl}
+          src={imageUrl}
           alt={`Photo ${slot.id + 1}`}
           className={styles.photo}
           draggable={false}

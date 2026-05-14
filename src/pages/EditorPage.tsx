@@ -1,91 +1,73 @@
-import { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import styles from './EditorPage.module.css';
-import Header from '@/components/Header/Header';
-import StickerPanel from '@/components/StickerPanel/StickerPanel';
-import FrameCanvas from '@/components/FrameCanvas/FrameCanvas';
-import ToolPanel from '@/components/ToolPanel/ToolPanel';
-import FrameSelector from '@/components/FrameSelector/FrameSelector';
 import { useEditor } from '@/hooks/useEditor';
+import FrameCanvas from '@/components/FrameCanvas/FrameCanvas';
+import FrameSelector from '@/components/FrameSelector/FrameSelector';
+import Header from '@/components/Header/Header';
+import { STICKERS } from '@/lib/stickers';
 import { StickerItem } from '@/types';
 
 export default function EditorPage() {
-  const editor = useEditor();
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const [draggedSticker, setDraggedSticker] = useState<StickerItem | null>(null);
+  const {
+    photoSlots,
+    placedStickers,
+    selectedStickerId,
+    activeFrame,
+    activePhotoSlot,
+    setSelectedStickerId,
+    setActiveFrame,
+    setActivePhotoSlot,
+    addSticker,
+    updateSticker,
+    deleteSelectedSticker,
+    addPhoto,
+    clearAll,
+    saveFrame,
+  } = useEditor();
 
-  const handleStickerDragStart = (sticker: StickerItem) => {
-    setDraggedSticker(sticker);
-  };
-
-  const handleCanvasDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    if (!draggedSticker || !canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    editor.addSticker(draggedSticker.emoji, draggedSticker.id, x, y);
-    setDraggedSticker(null);
-  };
-
-  const handleCanvasDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-  };
-
-  const handleSave = () => {
-    alert('✨ Frame saved! In production, this would export your beautiful frame as an image!');
+  const handleStickerClick = (sticker: StickerItem) => {
+    addSticker(sticker.emoji, sticker.label);
   };
 
   return (
     <div className={styles.page}>
-      <Header onSave={handleSave} onClear={editor.clearCanvas} />
-      <div className={styles.workspace}>
-        <StickerPanel
-          onStickerDragStart={handleStickerDragStart}
-          onStickerClick={(sticker) => {
-            const canvasEl = canvasRef.current;
-            if (!canvasEl) return;
-            const rect = canvasEl.getBoundingClientRect();
-            const x = 80 + Math.random() * (rect.width - 160);
-            const y = 80 + Math.random() * (rect.height - 160);
-            editor.addSticker(sticker.emoji, sticker.id, x, y);
-          }}
-        />
-        <div className={styles.centerArea}>
-          <FrameSelector
-            activeFrame={editor.activeFrame}
-            onSelectFrame={editor.setActiveFrame}
-          />
-          <div
-            ref={canvasRef}
-            onDrop={handleCanvasDrop}
-            onDragOver={handleCanvasDragOver}
-            onClick={() => editor.selectSticker(null)}
-            className={styles.canvasWrapper}
-          >
-            <FrameCanvas
-              photoSlots={editor.photoSlots}
-              placedStickers={editor.placedStickers}
-              selectedStickerId={editor.selectedStickerId}
-              activeFrame={editor.activeFrame}
-              activePhotoSlot={editor.activePhotoSlot}
-              onSelectSticker={editor.selectSticker}
-              onUpdateSticker={editor.updateSticker}
-              onAddPhoto={editor.addPhoto}
-              onSetActivePhotoSlot={editor.setActivePhotoSlot}
-            />
+      <Header onSave={saveFrame} onClear={clearAll} />
+      <div className={styles.toolbar}>
+        <FrameSelector activeFrame={activeFrame} onSelectFrame={setActiveFrame} />
+      </div>
+      <div className={styles.main}>
+        {/* Sticker panel */}
+        <div className={styles.stickerPanel}>
+          <div className={styles.panelTitle}>✨ Stickers</div>
+          <div className={styles.stickerGrid}>
+            {STICKERS.map(sticker => (
+              <button
+                key={sticker.id}
+                className={styles.stickerBtn}
+                onClick={() => handleStickerClick(sticker)}
+                title={sticker.label}
+              >
+                <span className={styles.stickerEmoji}>{sticker.emoji}</span>
+                <span className={styles.stickerLabel}>{sticker.label}</span>
+              </button>
+            ))}
           </div>
         </div>
-        <ToolPanel
-          selectedSticker={editor.selectedSticker}
-          onRotate={editor.rotateSelectedSticker}
-          onScale={editor.scaleSelectedSticker}
-          onDelete={editor.deleteSticker}
-          onSave={handleSave}
-          photoSlots={editor.photoSlots}
-          activePhotoSlot={editor.activePhotoSlot}
-          onAddPhoto={editor.addPhoto}
-          onSetActivePhotoSlot={editor.setActivePhotoSlot}
-        />
+
+        {/* Canvas */}
+        <div className={styles.canvasArea}>
+          <FrameCanvas
+            photoSlots={photoSlots}
+            placedStickers={placedStickers}
+            selectedStickerId={selectedStickerId}
+            activeFrame={activeFrame}
+            activePhotoSlot={activePhotoSlot}
+            onSelectSticker={setSelectedStickerId}
+            onUpdateSticker={updateSticker}
+            onAddPhoto={addPhoto}
+            onSetActivePhotoSlot={setActivePhotoSlot}
+          />
+        </div>
       </div>
     </div>
   );
