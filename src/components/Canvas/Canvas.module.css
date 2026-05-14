@@ -1,174 +1,142 @@
 .canvas {
   position: relative;
-  width: 100%;
-  max-width: 480px;
-  aspect-ratio: 3 / 4.5;
-  background: white;
-  border-radius: 24px;
+  width: 340px;
+  min-height: 480px;
+  background: linear-gradient(160deg, #fff5fc 0%, #f5f0ff 100%);
+  border: 4px solid #ffb3d9;
+  border-radius: 20px;
+  padding: 28px 20px 36px;
   box-shadow:
-    0 8px 40px rgba(200, 100, 200, 0.15),
-    0 2px 10px rgba(200, 100, 200, 0.1),
-    inset 0 0 0 3px #fdd9ef;
+    0 0 0 6px #ffe0f4,
+    0 8px 32px rgba(255, 100, 180, 0.18),
+    0 2px 8px rgba(0,0,0,0.08);
+  user-select: none;
   overflow: hidden;
-  margin: 0 auto;
-  cursor: default;
 }
 
-.frameDecor {
+.outerBorder {
   position: absolute;
-  inset: 0;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.frameInner {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  background: linear-gradient(180deg, #fff5fb 0%, #f8f0ff 50%, #f0faff 100%);
-  border-radius: 16px;
-  padding: 12px;
-  border: 2px dashed #f0b8dc;
+  inset: 6px;
+  border: 2px dashed #ffd6ee;
+  border-radius: 14px;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .photoGrid {
-  flex: 1;
-  display: grid;
-  gap: 8px;
-}
-
-.grid4 {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-}
-
-.grid2 {
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr;
-}
-
-.grid3 {
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-}
-
-.grid3 .slotWrapper:last-child {
-  grid-column: 1 / -1;
-}
-
-.slotWrapper {
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2.5px solid #fdd9ef;
-  background: linear-gradient(135deg, #fef8fc, #f8f4ff);
-  transition: all 0.2s;
   position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 10px;
+  width: 100%;
 }
 
-.slotWrapper:hover {
-  border-color: #ff85c2;
-  box-shadow: 0 0 0 3px rgba(255, 133, 194, 0.2);
-  transform: scale(1.01);
+.grid4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+.grid2 { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+.grid3 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+
+.photoSlot {
+  position: relative;
+  aspect-ratio: 3/4;
+  background: #fff0fa;
+  border: 2px dashed #ffb3d9;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photoSlot:hover {
+  border-color: #ff80c0;
+  background: #ffe0f4;
 }
 
 .photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .emptySlot {
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
+  gap: 4px;
+  pointer-events: none;
 }
 
-.emptyIcon {
-  font-size: 2rem;
-  opacity: 0.6;
-  animation: float 3s ease-in-out infinite;
+.addIcon {
+  font-size: 1.6rem;
 }
 
-.emptyText {
-  font-size: 0.7rem;
-  color: #b07acc;
-  font-family: 'Comic Sans MS', cursive;
+.addText {
+  font-size: 0.65rem;
+  color: #c080a8;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.frameBrand {
-  text-align: center;
-  padding: 6px 0 2px;
-  font-family: 'Comic Sans MS', cursive;
-  font-size: 0.75rem;
-  color: #e0559e;
-  letter-spacing: 2px;
+.hiddenInput {
+  display: none;
 }
 
-/* Stickers */
+/* Placed stickers */
 .sticker {
   position: absolute;
-  z-index: 10;
   cursor: grab;
-  user-select: none;
-  transition: filter 0.15s;
   line-height: 1;
-}
-
-.sticker:hover {
-  filter: drop-shadow(0 4px 10px rgba(200, 100, 200, 0.35));
+  touch-action: none;
+  transition: filter 0.15s;
+  z-index: 10;
 }
 
 .sticker:active {
   cursor: grabbing;
 }
 
-.stickerEmoji {
-  display: block;
-  filter: drop-shadow(1px 2px 4px rgba(200, 100, 200, 0.25));
-}
-
 .stickerSelected {
-  z-index: 20;
+  filter: drop-shadow(0 0 6px #ff80c0);
 }
 
-.stickerSelected::before {
-  content: '';
+.boundingBox {
   position: absolute;
-  inset: -8px;
-  border: 2px dashed #ff85c2;
-  border-radius: 8px;
+  inset: -6px;
+  border: 2px dashed #ff60b0;
+  border-radius: 6px;
   pointer-events: none;
-  animation: stickerPulse 1.5s ease-in-out infinite;
-}
-
-@keyframes stickerPulse {
-  0%, 100% { border-color: #ff85c2; }
-  50% { border-color: #c97ef7; }
 }
 
 .handle {
   position: absolute;
   width: 10px;
   height: 10px;
-  background: white;
-  border: 2px solid #ff85c2;
+  background: #fff;
+  border: 2px solid #ff60b0;
   border-radius: 50%;
+  z-index: 101;
   pointer-events: none;
 }
 
-.handleTL { top: -12px; left: -12px; }
-.handleTR { top: -12px; right: -12px; }
-.handleBL { bottom: -12px; left: -12px; }
-.handleBR { bottom: -12px; right: -12px; }
+.handleTL { top: -10px; left: -10px; }
+.handleTR { top: -10px; right: -10px; }
+.handleBL { bottom: -10px; left: -10px; }
+.handleBR { bottom: -10px; right: -10px; }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+.frameLabel {
+  position: absolute;
+  bottom: 8px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.7rem;
+  color: #d080b8;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  z-index: 5;
+  pointer-events: none;
 }

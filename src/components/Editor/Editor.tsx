@@ -88,21 +88,7 @@ export default function Editor() {
   }, [selectedId]);
 
   const handleSave = useCallback(() => {
-    if (!canvasRef.current) return;
-    const tryExport = async () => {
-      try {
-        const html2canvasModule = await import(/* @vite-ignore */ 'html2canvas' as string) as any;
-        const html2canvas = html2canvasModule.default ?? html2canvasModule;
-        const canvas: HTMLCanvasElement = await html2canvas(canvasRef.current!, { useCORS: true, scale: 2 });
-        const link = document.createElement('a');
-        link.download = 'y2k-photo-frame.png';
-        link.href = canvas.toDataURL();
-        link.click();
-      } catch {
-        alert('To save as an image, use your browser\'s screenshot tool (or install html2canvas). Your creation looks amazing! ✨');
-      }
-    };
-    tryExport();
+    alert('💾 To save your frame, use your browser screenshot tool (e.g. Ctrl+Shift+S). Your creation looks amazing! ✨');
   }, []);
 
   return (
