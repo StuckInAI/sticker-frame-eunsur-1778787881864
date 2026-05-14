@@ -1,0 +1,55 @@
+.slot {
+  border-radius: var(--radius-md);
+  border: 2px dashed;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition));
+  position: relative;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot:hover {
+  background: rgba(255, 200, 230, 0.18);
+  transform: scale(1.01);
+}
+
+.photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+}
+
+.emptyIcon {
+  color: var(--color-pink-light);
+  opacity: 0.8;
+}
+
+.emptyText {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  letter-spacing: 0.5px;
+}
+
+.emptyNum {
+  font-size: 18px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  color: var(--color-border);
+  opacity: 0.5;
+}

@@ -1,0 +1,41 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background: var(--color-bg);
+  background-image:
+    radial-gradient(circle at 10% 20%, rgba(255, 133, 194, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(201, 126, 247, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(133, 200, 255, 0.05) 0%, transparent 60%);
+}
+
+.workspace {
+  display: flex;
+  flex: 1;
+  gap: 0;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.centerArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  min-width: 0;
+  padding: 12px 8px;
+  gap: 10px;
+}
+
+.canvasWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+  position: relative;
+}

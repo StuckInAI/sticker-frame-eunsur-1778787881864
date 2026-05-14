@@ -1,0 +1,120 @@
+.panel {
+  width: 170px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #fff0f8 0%, #f8f0ff 100%);
+  border-right: 2px solid var(--color-border-light);
+  overflow: hidden;
+}
+
+.panelHeader {
+  padding: 12px 14px 8px;
+  border-bottom: 1.5px dashed var(--color-border-light);
+}
+
+.panelTitle {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.categories {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  flex-shrink: 0;
+}
+
+.catBtn {
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  transition: all var(--transition));
+  text-align: left;
+  letter-spacing: 0.3px;
+}
+
+.catBtn:hover {
+  background: var(--color-pink-light);
+  color: var(--color-pink-dark);
+}
+
+.catBtnActive {
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-pink-light), var(--color-purple-light));
+  color: var(--color-text);
+  font-size: 11px;
+  font-weight: 700;
+  text-align: left;
+  letter-spacing: 0.3px;
+  border: 1.5px solid var(--color-border);
+}
+
+.grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  padding: 8px 10px;
+  overflow-y: auto;
+  align-content: start;
+}
+
+.stickerCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 4px;
+  border-radius: var(--radius-md);
+  background: white;
+  border: 1.5px solid var(--color-border-light);
+  cursor: grab;
+  transition: all var(--transition-bounce);
+  user-select: none;
+}
+
+.stickerCell:hover {
+  transform: scale(1.08);
+  border-color: var(--color-pink);
+  box-shadow: var(--shadow-sticker);
+  background: var(--color-surface-alt);
+}
+
+.stickerCell:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+.stickerEmoji {
+  font-size: 24px;
+  line-height: 1;
+  filter: drop-shadow(0 2px 4px rgba(200, 100, 200, 0.2));
+}
+
+.stickerLabel {
+  font-size: 9px;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.hint {
+  padding: 8px 12px;
+  text-align: center;
+  font-size: 10px;
+  color: var(--color-text-light);
+  border-top: 1.5px dashed var(--color-border-light);
+  flex-shrink: 0;
+}

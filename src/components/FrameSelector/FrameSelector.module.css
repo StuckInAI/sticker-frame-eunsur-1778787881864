@@ -1,0 +1,58 @@
+.selector {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
+  overflow-x: auto;
+  padding: 0 4px;
+  scrollbar-width: thin;
+  max-width: 100%;
+}
+
+.label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+.frameBtn,
+.frameBtnActive {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text);
+  transition: all var(--transition-bounce);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.frameBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.frameBtnActive {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+  font-weight: 700;
+}
+
+.frameColorDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.frameName {
+  font-size: 10px;
+}
