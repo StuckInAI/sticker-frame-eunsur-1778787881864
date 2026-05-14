@@ -1,0 +1,80 @@
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  background: white;
+  border-radius: 16px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 14px rgba(180,140,200,0.18);
+  border: 1.5px solid #e8d4ff;
+  width: 100%;
+  max-width: 640px;
+}
+
+.group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.groupLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #9a80b0;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  margin-right: 2px;
+}
+
+.btn {
+  background: #f8e8ff;
+  border: 1.5px solid #d4b3ff;
+  border-radius: 20px;
+  padding: 5px 11px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #6a3a9c;
+  transition: background 0.14s, transform 0.1s, box-shadow 0.14s;
+  white-space: nowrap;
+}
+.btn:hover:not(:disabled) {
+  background: #ead4ff;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(180,100,255,0.2);
+}
+.btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+.btn:active:not(:disabled) { transform: translateY(0); }
+
+.btnActive {
+  background: #d4b3ff !important;
+  border-color: #b080f0 !important;
+  color: #3a1a6c !important;
+  box-shadow: 0 2px 8px rgba(176,128,240,0.25);
+}
+
+.btnDanger {
+  background: #ffe0ec;
+  border-color: #ffb3cc;
+  color: #9c2a4a;
+}
+.btnDanger:hover:not(:disabled) {
+  background: #ffc8da;
+}
+
+.btnSave {
+  background: linear-gradient(135deg, #b3f0e0 0%, #d4b3ff 100%);
+  border-color: #80d4c0;
+  color: #2a5a4c;
+  font-weight: 700;
+  padding: 6px 16px;
+}
+.btnSave:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100,200,180,0.3);
+}

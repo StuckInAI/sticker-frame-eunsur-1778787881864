@@ -1,0 +1,79 @@
+.canvas {
+  position: relative;
+  background: white;
+  border-radius: 18px;
+  box-shadow:
+    0 0 0 4px #ffb3d9,
+    0 0 0 8px #d4b3ff,
+    0 8px 32px rgba(180,140,200,0.3);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* 4-cut: 2×2 grid */
+.grid4 .slotsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 420px;
+  height: 560px;
+}
+
+/* 2-cut: 1×2 */
+.grid2 .slotsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr;
+  width: 300px;
+  height: 480px;
+}
+
+/* Strip: 1×3 */
+.gridStrip .slotsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  width: 220px;
+  height: 540px;
+}
+
+.slot {
+  border: 2px dashed #d4b3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  transition: background 0.15s;
+}
+.slot:hover { background: #fdf0ff; }
+
+.slotImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slotEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.addIcon { font-size: 2rem; }
+
+.addText {
+  font-size: 0.78rem;
+  color: #b09ac0;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+@media (max-width: 600px) {
+  .grid4 .slotsGrid { width: 280px; height: 374px; }
+  .grid2 .slotsGrid { width: 220px; height: 352px; }
+  .gridStrip .slotsGrid { width: 160px; height: 396px; }
+}

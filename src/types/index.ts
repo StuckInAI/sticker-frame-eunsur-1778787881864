@@ -1,31 +1,16 @@
-export type StickerItem = {
+export interface PlacedSticker {
   id: string;
   emoji: string;
   label: string;
-  category: string;
-};
+  x: number;       // percent of canvas width
+  y: number;       // percent of canvas height
+  size: number;    // px
+  rotation: number; // degrees
+}
 
-export type PlacedSticker = {
-  id: string;
-  stickerId: string;
-  emoji: string;
-  x: number;
-  y: number;
-  rotation: number;
-  scale: number;
-  zIndex: number;
-};
-
-export type PhotoSlot = {
+export interface PhotoSlot {
   id: number;
-  imageUrl: string | null;
-};
+  dataUrl: string | null;
+}
 
-export type FrameTemplate = {
-  id: string;
-  name: string;
-  cols: number;
-  rows: number;
-  borderColor: string;
-  bgColor: string;
-};
+export type FrameLayout = '4cut' | '2cut' | 'strip';

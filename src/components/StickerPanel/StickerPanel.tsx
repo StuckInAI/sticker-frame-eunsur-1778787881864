@@ -1,58 +1,44 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import styles from './StickerPanel.module.css';
-import { ALL_STICKERS, STICKER_CATEGORIES } from '@/lib/stickers';
-import { StickerItem } from '@/types';
+import { STICKERS, CATEGORIES, StickerDef } from '../../data/stickers';
 
-type StickerPanelProps = {
-  onStickerDragStart: (sticker: StickerItem) => void;
-  onStickerClick: (sticker: StickerItem) => void;
-};
+interface Props {
+  onDragStart: (def: StickerDef) => void;
+}
 
-export default function StickerPanel({ onStickerDragStart, onStickerClick }: StickerPanelProps) {
-  const [activeCategory, setActiveCategory] = useState<string>('Stars');
+export default function StickerPanel({ onDragStart }: Props) {
+  const [activeCategory, setActiveCategory] = useState<string>('stars');
 
-  const filtered = ALL_STICKERS.filter(s => s.category === activeCategory);
+  const filtered = STICKERS.filter(s => s.category === activeCategory);
 
   return (
-    <aside className={styles.panel}>
-      <div className={styles.panelHeader}>
-        <span className={styles.panelTitle}>🌟 Stickers</span>
-      </div>
-
-      <div className={styles.categories}>
-        {STICKER_CATEGORIES.map(cat => (
+    <div className={styles.panel}>
+      <div className={styles.title}>🎨 Stickers</div>
+      <div className={styles.tabs}>
+        {CATEGORIES.map(cat => (
           <button
-            key={cat}
-            className={activeCategory === cat ? styles.catBtnActive : styles.catBtn}
-            onClick={() => setActiveCategory(cat)}
+            key={cat.key}
+            className={`${styles.tab} ${activeCategory === cat.key ? styles.tabActive : ''}`}
+            onClick={() => setActiveCategory(cat.key)}
           >
-            {cat}
+            {cat.label}
           </button>
         ))}
       </div>
-
       <div className={styles.grid}>
         {filtered.map(sticker => (
           <div
             key={sticker.id}
-            className={styles.stickerCell}
+            className={styles.stickerItem}
             draggable
-            onDragStart={(e) => {
-              e.dataTransfer.effectAllowed = 'copy';
-              onStickerDragStart(sticker);
-            }}
-            onClick={() => onStickerClick(sticker)}
             title={sticker.label}
+            onDragStart={() => onDragStart(sticker)}
           >
-            <span className={styles.stickerEmoji}>{sticker.emoji}</span>
-            <span className={styles.stickerLabel}>{sticker.label}</span>
+            <span className={styles.emoji}>{sticker.emoji}</span>
+            <span className={styles.emojiLabel}>{sticker.label}</span>
           </div>
         ))}
       </div>
-
-      <div className={styles.hint}>
-        <span>Drag or click to add ✨</span>
-      </div>
-    </aside>
+    </div>
   );
 }

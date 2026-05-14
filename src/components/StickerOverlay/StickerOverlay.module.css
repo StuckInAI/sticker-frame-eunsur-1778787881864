@@ -1,0 +1,52 @@
+.sticker {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  z-index: 10;
+  transition: filter 0.1s;
+  line-height: 1;
+}
+.sticker:active { cursor: grabbing; }
+
+.selected {
+  outline: 2px dashed #b080f0;
+  outline-offset: 4px;
+  border-radius: 6px;
+  filter: drop-shadow(0 0 6px rgba(176,128,240,0.55));
+}
+
+.handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid #b080f0;
+  border-radius: 50%;
+  z-index: 12;
+}
+.handleTL { top: -6px; left: -6px; }
+.handleTR { top: -6px; right: -6px; }
+.handleBL { bottom: -6px; left: -6px; }
+.handleBR { bottom: -6px; right: -6px; }
+
+.rotateHandle {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 13px;
+  color: #b080f0;
+  background: white;
+  border: 1.5px solid #b080f0;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 12;
+  box-shadow: 0 1px 4px rgba(180,100,255,0.2);
+}

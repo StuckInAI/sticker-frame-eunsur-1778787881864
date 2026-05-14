@@ -1,13 +1,6 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import EditorPage from '@/pages/EditorPage';
+import React from 'react';
+import Editor from './components/Editor/Editor';
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<EditorPage />} />
-        <Route path="*" element={<EditorPage />} />
-      </Routes>
-    </BrowserRouter>
-  );
+  return <Editor />;
 }
