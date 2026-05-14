@@ -1,79 +1,174 @@
 .canvas {
   position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 3 / 4.5;
   background: white;
-  border-radius: 18px;
+  border-radius: 24px;
   box-shadow:
-    0 0 0 4px #ffb3d9,
-    0 0 0 8px #d4b3ff,
-    0 8px 32px rgba(180,140,200,0.3);
+    0 8px 40px rgba(200, 100, 200, 0.15),
+    0 2px 10px rgba(200, 100, 200, 0.1),
+    inset 0 0 0 3px #fdd9ef;
   overflow: hidden;
-  user-select: none;
+  margin: 0 auto;
+  cursor: default;
 }
 
-/* 4-cut: 2×2 grid */
-.grid4 .slotsGrid {
+.frameDecor {
+  position: absolute;
+  inset: 0;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.frameInner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: linear-gradient(180deg, #fff5fb 0%, #f8f0ff 50%, #f0faff 100%);
+  border-radius: 16px;
+  padding: 12px;
+  border: 2px dashed #f0b8dc;
+}
+
+.photoGrid {
+  flex: 1;
   display: grid;
+  gap: 8px;
+}
+
+.grid4 {
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  width: 420px;
-  height: 560px;
 }
 
-/* 2-cut: 1×2 */
-.grid2 .slotsGrid {
-  display: grid;
+.grid2 {
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr;
-  width: 300px;
-  height: 480px;
 }
 
-/* Strip: 1×3 */
-.gridStrip .slotsGrid {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  width: 220px;
-  height: 540px;
+.grid3 {
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 
-.slot {
-  border: 2px dashed #d4b3ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
+.grid3 .slotWrapper:last-child {
+  grid-column: 1 / -1;
+}
+
+.slotWrapper {
+  border-radius: 12px;
   overflow: hidden;
+  cursor: pointer;
+  border: 2.5px solid #fdd9ef;
+  background: linear-gradient(135deg, #fef8fc, #f8f4ff);
+  transition: all 0.2s;
   position: relative;
-  transition: background 0.15s;
 }
-.slot:hover { background: #fdf0ff; }
 
-.slotImg {
+.slotWrapper:hover {
+  border-color: #ff85c2;
+  box-shadow: 0 0 0 3px rgba(255, 133, 194, 0.2);
+  transform: scale(1.01);
+}
+
+.photo {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.slotEmpty {
+.emptySlot {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 6px;
+}
+
+.emptyIcon {
+  font-size: 2rem;
+  opacity: 0.6;
+  animation: float 3s ease-in-out infinite;
+}
+
+.emptyText {
+  font-size: 0.7rem;
+  color: #b07acc;
+  font-family: 'Comic Sans MS', cursive;
+}
+
+.frameBrand {
+  text-align: center;
+  padding: 6px 0 2px;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 0.75rem;
+  color: #e0559e;
+  letter-spacing: 2px;
+}
+
+/* Stickers */
+.sticker {
+  position: absolute;
+  z-index: 10;
+  cursor: grab;
+  user-select: none;
+  transition: filter 0.15s;
+  line-height: 1;
+}
+
+.sticker:hover {
+  filter: drop-shadow(0 4px 10px rgba(200, 100, 200, 0.35));
+}
+
+.sticker:active {
+  cursor: grabbing;
+}
+
+.stickerEmoji {
+  display: block;
+  filter: drop-shadow(1px 2px 4px rgba(200, 100, 200, 0.25));
+}
+
+.stickerSelected {
+  z-index: 20;
+}
+
+.stickerSelected::before {
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border: 2px dashed #ff85c2;
+  border-radius: 8px;
+  pointer-events: none;
+  animation: stickerPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes stickerPulse {
+  0%, 100% { border-color: #ff85c2; }
+  50% { border-color: #c97ef7; }
+}
+
+.handle {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: white;
+  border: 2px solid #ff85c2;
+  border-radius: 50%;
   pointer-events: none;
 }
 
-.addIcon { font-size: 2rem; }
+.handleTL { top: -12px; left: -12px; }
+.handleTR { top: -12px; right: -12px; }
+.handleBL { bottom: -12px; left: -12px; }
+.handleBR { bottom: -12px; right: -12px; }
 
-.addText {
-  font-size: 0.78rem;
-  color: #b09ac0;
-  font-weight: 600;
-  letter-spacing: 0.3px;
-}
-
-@media (max-width: 600px) {
-  .grid4 .slotsGrid { width: 280px; height: 374px; }
-  .grid2 .slotsGrid { width: 220px; height: 352px; }
-  .gridStrip .slotsGrid { width: 160px; height: 396px; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
 }

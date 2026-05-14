@@ -12,66 +12,91 @@ interface Props {
   onSave: () => void;
 }
 
+const layouts: { value: FrameLayout; label: string }[] = [
+  { value: '4cut', label: '4-Cut' },
+  { value: '2cut', label: '2-Cut' },
+  { value: '3cut', label: '3-Cut' },
+];
+
 export default function Toolbar({
-  layout, onLayoutChange, selectedId, onRotate, onResize, onDelete, onSave
+  layout,
+  onLayoutChange,
+  selectedId,
+  onRotate,
+  onResize,
+  onDelete,
+  onSave,
 }: Props) {
   return (
     <div className={styles.toolbar}>
-      {/* Layout picker */}
       <div className={styles.group}>
         <span className={styles.groupLabel}>Frame</span>
-        {(['4cut', '2cut', 'strip'] as FrameLayout[]).map(l => (
+        <div className={styles.btnRow}>
+          {layouts.map(l => (
+            <button
+              key={l.value}
+              className={`${styles.btn} ${layout === l.value ? styles.btnActive : ''}`}
+              onClick={() => onLayoutChange(l.value)}
+            >
+              {l.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.divider} />
+
+      <div className={styles.group}>
+        <span className={styles.groupLabel}>Sticker Tools</span>
+        <div className={styles.btnRow}>
           <button
-            key={l}
-            className={`${styles.btn} ${layout === l ? styles.btnActive : ''}`}
-            onClick={() => onLayoutChange(l)}
+            className={styles.btn}
+            onClick={() => onRotate(-15)}
+            disabled={!selectedId}
+            title="Rotate Left"
           >
-            {l === '4cut' ? '⊞ 4-Cut' : l === '2cut' ? '▭ 2-Cut' : '▮ Strip'}
+            ↺ -15°
           </button>
-        ))}
+          <button
+            className={styles.btn}
+            onClick={() => onRotate(15)}
+            disabled={!selectedId}
+            title="Rotate Right"
+          >
+            ↻ +15°
+          </button>
+          <button
+            className={styles.btn}
+            onClick={() => onResize(8)}
+            disabled={!selectedId}
+            title="Size Up"
+          >
+            🔍+
+          </button>
+          <button
+            className={styles.btn}
+            onClick={() => onResize(-8)}
+            disabled={!selectedId}
+            title="Size Down"
+          >
+            🔍-
+          </button>
+          <button
+            className={`${styles.btn} ${styles.btnDanger}`}
+            onClick={onDelete}
+            disabled={!selectedId}
+            title="Delete"
+          >
+            🗑
+          </button>
+        </div>
       </div>
 
-      {/* Sticker controls */}
-      <div className={styles.group}>
-        <span className={styles.groupLabel}>Sticker</span>
-        <button
-          className={styles.btn}
-          disabled={!selectedId}
-          onClick={() => onRotate(-15)}
-          title="Rotate left 15°"
-        >↺ Rotate −</button>
-        <button
-          className={styles.btn}
-          disabled={!selectedId}
-          onClick={() => onRotate(15)}
-          title="Rotate right 15°"
-        >↻ Rotate +</button>
-        <button
-          className={styles.btn}
-          disabled={!selectedId}
-          onClick={() => onResize(-8)}
-          title="Shrink"
-        >🔍 Size −</button>
-        <button
-          className={styles.btn}
-          disabled={!selectedId}
-          onClick={() => onResize(8)}
-          title="Grow"
-        >🔍 Size +</button>
-        <button
-          className={`${styles.btn} ${styles.btnDanger}`}
-          disabled={!selectedId}
-          onClick={onDelete}
-          title="Delete sticker"
-        >🗑 Delete</button>
-      </div>
+      <div className={styles.divider} />
 
-      {/* Save */}
-      <div className={styles.group}>
-        <button className={`${styles.btn} ${styles.btnSave}`} onClick={onSave}>
-          💾 Save Frame
-        </button>
-      </div>
+      <button className={`${styles.btn} ${styles.btnSave}`} onClick={onSave}>
+        💾 Save
+      </button>
     </div>
   );
 }

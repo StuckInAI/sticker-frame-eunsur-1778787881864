@@ -1,7 +1,6 @@
-import React, { forwardRef, useRef } from 'react';
+import React, { forwardRef, useRef, useCallback } from 'react';
 import styles from './Canvas.module.css';
 import { PlacedSticker, PhotoSlot, FrameLayout } from '../../types';
-import StickerOverlay from '../StickerOverlay/StickerOverlay';
 
 interface Props {
   layout: FrameLayout;
@@ -15,78 +14,136 @@ interface Props {
   onMoveSticker: (id: string, x: number, y: number) => void;
 }
 
-const Canvas = forwardRef<HTMLDivElement, Props>((
+const Canvas = forwardRef<HTMLDivElement, Props>(function Canvas(
   { layout, slots, stickers, selectedId, onPhotoUpload, onDrop, onDragOver, onSelectSticker, onMoveSticker },
   ref
-) => {
-  const fileInputRefs = useRef<Record<number, HTMLInputElement | null>>({});
+) {
+  const dragState = useRef<{ id: string; startX: number; startY: number; origX: number; origY: number } | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const getGridClass = () => {
+    switch (layout) {
+      case '2cut': return styles.grid2;
+      case '3cut': return styles.grid3;
+      default: return styles.grid4;
+    }
+  };
 
   const handleSlotClick = (slotId: number) => {
-    onSelectSticker(null);
-    fileInputRefs.current[slotId]?.click();
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (file) onPhotoUpload(slotId, file);
+    };
+    input.click();
   };
 
-  const handleFileChange = (slotId: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) onPhotoUpload(slotId, file);
-    e.target.value = '';
+  const handleStickerMouseDown = useCallback((e: React.MouseEvent, sticker: PlacedSticker) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onSelectSticker(sticker.id);
+    dragState.current = {
+      id: sticker.id,
+      startX: e.clientX,
+      startY: e.clientY,
+      origX: sticker.x,
+      origY: sticker.y,
+    };
+
+    const handleMouseMove = (ev: MouseEvent) => {
+      if (!dragState.current || !containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const dx = ((ev.clientX - dragState.current.startX) / rect.width) * 100;
+      const dy = ((ev.clientY - dragState.current.startY) / rect.height) * 100;
+      onMoveSticker(dragState.current.id, dragState.current.origX + dx, dragState.current.origY + dy);
+    };
+
+    const handleMouseUp = () => {
+      dragState.current = null;
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+  }, [onSelectSticker, onMoveSticker]);
+
+  const handleCanvasClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget || (e.target as HTMLElement).closest(`.${styles.slotWrapper}`)) {
+      // Don't deselect when clicking slots
+    } else if (!(e.target as HTMLElement).closest(`.${styles.sticker}`)) {
+      onSelectSticker(null);
+    }
   };
 
-  const layoutClass = {
-    '4cut': styles.grid4,
-    '2cut': styles.grid2,
-    'strip': styles.gridStrip,
-  }[layout];
+  const setRefs = useCallback((el: HTMLDivElement | null) => {
+    containerRef.current = el;
+    if (typeof ref === 'function') ref(el);
+    else if (ref) (ref as React.MutableRefObject<HTMLDivElement | null>).current = el;
+  }, [ref]);
 
   return (
     <div
-      ref={ref}
-      className={`${styles.canvas} ${layoutClass}`}
+      ref={setRefs}
+      className={styles.canvas}
       onDrop={onDrop}
       onDragOver={onDragOver}
-      onClick={() => onSelectSticker(null)}
+      onClick={handleCanvasClick}
     >
-      {/* Photo slots */}
-      <div className={styles.slotsGrid}>
-        {slots.map(slot => (
-          <div
-            key={slot.id}
-            className={styles.slot}
-            onClick={(e) => { e.stopPropagation(); handleSlotClick(slot.id); }}
-          >
-            {slot.dataUrl ? (
-              <img src={slot.dataUrl} alt={`Photo ${slot.id + 1}`} className={styles.slotImg} />
-            ) : (
-              <div className={styles.slotEmpty}>
-                <span className={styles.addIcon}>📷</span>
-                <span className={styles.addText}>Add Photo</span>
+      {/* Frame background decoration */}
+      <div className={styles.frameDecor}>
+        <div className={styles.frameInner}>
+          <div className={`${styles.photoGrid} ${getGridClass()}`}>
+            {slots.map(slot => (
+              <div
+                key={slot.id}
+                className={styles.slotWrapper}
+                onClick={(e) => { e.stopPropagation(); handleSlotClick(slot.id); }}
+              >
+                {slot.dataUrl ? (
+                  <img src={slot.dataUrl} alt={`Photo ${slot.id + 1}`} className={styles.photo} />
+                ) : (
+                  <div className={styles.emptySlot}>
+                    <span className={styles.emptyIcon}>📸</span>
+                    <span className={styles.emptyText}>Click to add photo</span>
+                  </div>
+                )}
               </div>
-            )}
-            <input
-              type="file"
-              accept="image/*"
-              style={{ display: 'none' }}
-              ref={el => { fileInputRefs.current[slot.id] = el; }}
-              onChange={(e) => handleFileChange(slot.id, e)}
-            />
+            ))}
           </div>
-        ))}
+          {/* Branding at bottom */}
+          <div className={styles.frameBrand}>✨ y2k memories ✨</div>
+        </div>
       </div>
 
-      {/* Sticker overlays */}
+      {/* Placed stickers layer */}
       {stickers.map(sticker => (
-        <StickerOverlay
+        <div
           key={sticker.id}
-          sticker={sticker}
-          isSelected={selectedId === sticker.id}
-          canvasRef={ref as React.RefObject<HTMLDivElement>}
-          onSelect={onSelectSticker}
-          onMove={onMoveSticker}
-        />
+          className={`${styles.sticker} ${selectedId === sticker.id ? styles.stickerSelected : ''}`}
+          style={{
+            left: `${sticker.x}%`,
+            top: `${sticker.y}%`,
+            fontSize: `${sticker.size}px`,
+            transform: `translate(-50%, -50%) rotate(${sticker.rotation}deg)`,
+          }}
+          onMouseDown={(e) => handleStickerMouseDown(e, sticker)}
+        >
+          <span className={styles.stickerEmoji}>{sticker.emoji}</span>
+          {selectedId === sticker.id && (
+            <>
+              <div className={styles.handle + ' ' + styles.handleTL} />
+              <div className={styles.handle + ' ' + styles.handleTR} />
+              <div className={styles.handle + ' ' + styles.handleBL} />
+              <div className={styles.handle + ' ' + styles.handleBR} />
+            </>
+          )}
+        </div>
       ))}
     </div>
   );
 });
 
-Canvas.displayName = 'Canvas';
 export default Canvas;

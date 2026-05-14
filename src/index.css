@@ -16,11 +16,22 @@
   --shadow: rgba(180,140,200,0.25);
 }
 
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font-family: 'Segoe UI', 'Comic Sans MS', cursive, sans-serif;
   background: linear-gradient(135deg, #fff0fb 0%, #f0f4ff 50%, #f0fff8 100%);
   min-height: 100vh;
   color: var(--dark);
+}
+
+#root {
+  width: 100%;
+  height: 100%;
 }
 
 button {

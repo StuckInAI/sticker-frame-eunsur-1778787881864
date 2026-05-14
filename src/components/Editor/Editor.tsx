@@ -89,7 +89,6 @@ export default function Editor() {
 
   const handleSave = useCallback(() => {
     if (!canvasRef.current) return;
-    // Fallback: guide user to use screenshot
     const tryExport = async () => {
       try {
         const html2canvasModule = await import(/* @vite-ignore */ 'html2canvas' as string) as any;
@@ -100,7 +99,7 @@ export default function Editor() {
         link.href = canvas.toDataURL();
         link.click();
       } catch {
-        alert('⚠️ Save feature requires the html2canvas package. For now, use your browser\'s screenshot tool!');
+        alert('To save as an image, use your browser\'s screenshot tool (or install html2canvas). Your creation looks amazing! ✨');
       }
     };
     tryExport();
